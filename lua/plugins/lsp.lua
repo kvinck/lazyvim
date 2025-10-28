@@ -41,6 +41,47 @@ return {
                         },
                     },
                 },
+                gopls = {
+                    settings = {
+                        gopls = {
+                            usePlaceholders = false,
+                            completeUnimported = true,
+                            staticcheck = true,
+                            gofumpt = true,
+                            analyses = {
+                                unusedparams = true,
+                                shadow = false,
+                                fieldalignment = false,
+                            },
+                            hints = {
+                                assignVariableTypes = true,
+                                compositeLiteralFields = true,
+                                compositeLiteralTypes = true,
+                                constantValues = true,
+                                functionTypeParameters = true,
+                                parameterNames = true,
+                                rangeVariableTypes = true,
+                            },
+                            -- Ensure gopls watches all files in the workspace
+                            directoryFilters = {
+                                "-**/node_modules",
+                                "-**/.git",
+                                "-**/vendor",
+                            },
+                            semanticTokens = true,
+                            -- Enable codelenses for better integration
+                            codelenses = {
+                                gc_details = true,
+                                generate = true,
+                                regenerate_cgo = true,
+                                test = true,
+                                tidy = true,
+                                upgrade_dependency = true,
+                                vendor = true,
+                            },
+                        },
+                    },
+                },
             },
         },
     },
