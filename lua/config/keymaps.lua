@@ -2,7 +2,7 @@
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 -- Add any additional keymaps here
 
-vim.keymap.set({ "n", "i" }, "<C-v>", "<Esc>")
+vim.keymap.set("i", "<C-c>", "<Esc>")
 vim.keymap.set("n", "J", "mzJ`z")
 vim.keymap.set("n", "<C-d>", "<C-d>zz")
 vim.keymap.set("n", "<c-u>", "<c-u>zz")
@@ -10,7 +10,8 @@ vim.keymap.set("n", "n", "nzzzv")
 vim.keymap.set("n", "N", "Nzzzv")
 vim.keymap.set({ "n", "i" }, "<C-s>", "<cmd>wa<CR><Esc>")
 
-vim.keymap.set("n", "Q", "<nop>")
+vim.keymap.set("n", "Q", "q")
+vim.keymap.set("n", "q", "<nop>")
 
 vim.keymap.set("n", "<leader>k", "<cmd>lnext<CR>zz")
 vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz")
@@ -18,8 +19,8 @@ vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz")
 vim.keymap.set("n", "gh", "^", { desc = "Goto start of line" })
 vim.keymap.set("n", "gl", "$", { desc = "Goto end of line" })
 
--- next greatest remap ever : asbjornHaland
-vim.keymap.set("x", "<leader>p", [["_dP]])
+-- Paste from system clipboard
+vim.keymap.set({ "n", "v" }, "<leader>p", [["+p]], { desc = "Paste from system clipboard" })
 
 -- next greatest remap ever : asbjornHaland
 vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]])

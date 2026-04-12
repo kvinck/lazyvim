@@ -1,14 +1,13 @@
 return {
-    "folke/sidekick.nvim",
-    opts = {
-        cli = {
-            mux = {
-                backend = "tmux",
-                enabled = true,
-            },
-            tools = {
-                claude = { cmd = { "/Users/kevin.vinck/.claude/local/claude" } },
-            },
+    {
+        "coder/claudecode.nvim",
+        dependencies = { "folke/snacks.nvim" },
+        opts = {
+            terminal_cmd = "~/.claude/local/claude", -- Point to local installation
+        },
+        config = true,
+        keys = {
+            -- Your keymaps here
         },
     },
 }

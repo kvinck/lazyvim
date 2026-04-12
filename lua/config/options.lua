@@ -10,3 +10,6 @@ vim.o.shiftwidth = 4
 vim.g.snacks_animate = false
 vim.g.lazyvim_eslint_auto_format = true
 vim.g.augment_workspace_folders = { "~/git/gocbshub/", "~/git/gocbshub-wx54/" }
+
+-- Disable clipboard integration to restore default yank behavior
+vim.opt.clipboard = ""
