@@ -1,0 +1,17 @@
+// Rule set for Obsidian vaults, selected in lua/plugins/markdown.lua.
+//
+// Markdown has no parse errors, so markdownlint has no "invalid syntax" class
+// to filter on -- nearly every rule is a style preference. These are the ones
+// that catch source which renders differently than it reads. Everything else
+// is off.
+{
+  "config": {
+    "default": false,
+
+    "MD011": true, // (text)[url] -- reversed, renders as literal text
+    "MD042": true, // [text]() -- empty link target
+    "MD051": true, // [text](#anchor) pointing at no such heading
+    "MD052": true, // [text][ref] with no matching definition
+    "MD056": true  // table row cell count differs; extra cells vanish
+  }
+}
