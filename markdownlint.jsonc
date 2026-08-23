@@ -1,0 +1,10 @@
+// Passed explicitly via --config from lua/plugins/markdown.lua.
+// nvim-lint pipes buffers over stdin, and in stdin mode markdownlint-cli2 only
+// reads config from the process cwd -- it does not walk up the tree -- so a
+// vault-root or $HOME config would be silently ignored.
+{
+  "config": {
+    // Prose and wikilinks do not hard-wrap at 80 columns.
+    "MD013": false
+  }
+}
