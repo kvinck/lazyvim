@@ -1,8 +1,13 @@
 return {
     {
+        "OldJobobo/retro-82.nvim",
+        name = "retro-82",
+        priority = 1000,
+    },
+    {
         "LazyVim/LazyVim",
         opts = {
-            colorscheme = "t3-ocean",
+            colorscheme = "retro-82",
         },
     },
 }
