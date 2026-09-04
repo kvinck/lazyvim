@@ -6,35 +6,28 @@
 -- (or the terminal) answers.
 local M = {}
 
-local function proc_lines(pid, file)
-  local ok, lines = pcall(vim.fn.readfile, "/proc/" .. pid .. "/" .. file)
-  return ok and lines or {}
-end
-
-local function proc_ppid(pid)
-  for _, line in ipairs(proc_lines(pid, "status")) do
-    local ppid = line:match("^PPid:%s+(%d+)")
-    if ppid then
-      return tonumber(ppid)
-    end
-  end
-end
-
-local function ancestor_process_named(name)
+-- Whether `name` appears anywhere in this process's own chain of ancestors.
+-- macOS has no /proc, so the walk goes through ps; comm is a full executable
+-- path there and a basename truncated to 15 characters on Linux, which is why
+-- the test is a substring match.
+local function in_process_tree_of(name)
   local pid = vim.fn.getpid()
 
   for _ = 1, 16 do
-    local ppid = proc_ppid(pid)
-    if not ppid or ppid <= 1 then
+    local line = vim.fn.systemlist({ "ps", "-o", "ppid=,comm=", "-p", tostring(pid) })[1]
+    local ppid, comm = (line or ""):match("^%s*(%d+)%s+(.*)$")
+    if not ppid then
       return false
     end
 
-    local comm = proc_lines(ppid, "comm")[1] or ""
     if comm:find(name, 1, true) then
       return true
     end
 
-    pid = ppid
+    pid = tonumber(ppid)
+    if pid <= 1 then
+      return false
+    end
   end
 
   return false
@@ -67,7 +60,7 @@ end
 function M.setup()
   local in_tmux = vim.env.TMUX ~= nil
   local in_ssh = vim.env.SSH_TTY ~= nil or vim.env.SSH_CONNECTION ~= nil
-  local in_herdr = vim.env.HERDR_PANE_ID ~= nil or ancestor_process_named("herdr")
+  local in_herdr = vim.env.HERDR_PANE_ID ~= nil or in_process_tree_of("herdr")
 
   if not (in_tmux or in_ssh or in_herdr) then
     return
