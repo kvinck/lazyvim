@@ -2,8 +2,8 @@
 -- every copy is emitted as OSC 52 (inside tmux this becomes a tmux buffer,
 -- rebroadcast to every attached client, local or SSH). Paste prefers the
 -- machine's own clipboard when one is reachable, so content copied in other
--- apps remains pasteable; without one, paste is an OSC 52 query that tmux
--- (or the terminal) answers.
+-- apps remains pasteable; without one, paste falls back to whatever this
+-- instance last copied.
 local M = {}
 
 -- Whether `name` appears anywhere in this process's own chain of ancestors.
@@ -67,12 +67,16 @@ function M.setup()
   end
 
   local osc52 = require("vim.ui.clipboard.osc52")
+  -- Lines this instance last put on each register, for the paste fallback.
+  local last_copied = {}
 
   local function copy(register)
     local emit = osc52.copy(register)
     local local_cmd = local_clipboard(register)
 
     return function(lines)
+      last_copied[register] = lines
+
       if local_cmd then
         vim.fn.system(local_cmd.copy, lines)
       end
@@ -85,8 +89,14 @@ function M.setup()
 
   local function paste(register)
     local local_cmd = local_clipboard(register)
+
+    -- With no clipboard to read back, report what this instance last copied.
+    -- The alternative is an OSC 52 query, which wedges the editor until it
+    -- times out against any terminal or multiplexer that will not answer one.
     if not local_cmd then
-      return osc52.paste(register)
+      return function()
+        return last_copied[register] or {}
+      end
     end
 
     return function()
