@@ -18,3 +18,16 @@ vim.g.augment_workspace_folders = { "~/git/gocbshub/", "~/git/gocbshub-wx54/" }
 
 -- Disable clipboard integration to restore default yank behavior
 vim.opt.clipboard = ""
+
+-- Neo-tree synchronizes cwd, but its synthetic buffer name retains the launch
+-- directory. Use cwd before project detection can treat that name as a file.
+vim.g.root_spec = {
+    function(buf)
+        if vim.bo[buf].filetype == "neo-tree" then
+            return vim.uv.cwd()
+        end
+    end,
+    "lsp",
+    { ".git", "lua" },
+    "cwd",
+}
